@@ -960,7 +960,7 @@ class Mastodon:
             if isinstance(response, list) and 'Link' in response_object.headers:
                 tmp_urls = requests.utils.parse_header_links(response_object.headers['Link'].rstrip('>').replace('>,<', ',<'))   
                 for url in tmp_urls:
-                    if url['rel'] == 'next':
+                    if url.get('rel') == 'next':
                         # Be paranoid and extract max_id specifically
                         next_url = url['url']
                         matchgroups = re.search(r"max_id=([0-9]*)", next_url)
@@ -972,7 +972,7 @@ class Mastodon:
                             next_params['max_id'] = int(matchgroups.group(1))
                             response[-1]['_pagination_next'] = next_params
                             
-                    if url['rel'] == 'prev':
+                    if url.get('rel') == 'prev':
                         # Be paranoid and extract since_id specifically
                         prev_url = url['url']
                         matchgroups = re.search(r"since_id=([0-9]*)", prev_url)
